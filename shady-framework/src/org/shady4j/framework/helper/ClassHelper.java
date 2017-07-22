@@ -14,21 +14,21 @@ import org.shady4j.framework.util.ClassUtil;
  */
 public final class ClassHelper {
 	
-	private static final Set<Class<?>> class_Set;
+	private static final Set<Class<?>> CLASS_SET;
 
 	/**
 	 * 定义类集合(用于存放所加载的类)
 	 */
 	static{
 		String basePackage = ConfigHelper.getJdbcAppBasePackage();
-		class_Set = ClassUtil.getClassSet(basePackage);
+		CLASS_SET = ClassUtil.getClassSet(basePackage);
 	}
 	
 	/**
 	 * 获取应用包名下的所有类 
 	 */
 	public static Set<Class<?>> getClassSet() {
-		return class_Set;
+		return CLASS_SET;
 	}
 	
 	/**
@@ -36,7 +36,7 @@ public final class ClassHelper {
 	 */
 	public static Set<Class<?>> getServiceClassSet() {
 		Set<Class<?>> classSet = new HashSet<Class<?>>();
-		for(Class<?> clazz : class_Set) {
+		for(Class<?> clazz : CLASS_SET) {
 			if(clazz.isAnnotationPresent(Service.class)) {
 				classSet.add(clazz);
 			}
@@ -49,7 +49,7 @@ public final class ClassHelper {
 	 */
 	public static Set<Class<?>> getControllerClassSet() {
 		Set<Class<?>> classSet = new HashSet<Class<?>>();
-		for(Class<?> clazz : class_Set) {
+		for(Class<?> clazz : CLASS_SET) {
 			if(clazz.isAnnotationPresent(Controller.class)) {
 				classSet.add(clazz);
 			}
@@ -65,6 +65,19 @@ public final class ClassHelper {
 		beanClassSet.addAll(getControllerClassSet());
 		beanClassSet.addAll(getServiceClassSet());
 		return beanClassSet;
+	}
+	
+	/**
+	 * 获取应用包名下某父类(或接口)的所有子类
+	 */
+	public static Set<Class<?>> getClassSetBySuper(Class<?> superClass) {
+		Set<Class<?>> classSet = new HashSet<Class<?>>();
+		for(Class<?> clazz : CLASS_SET) {
+			if(superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
+				classSet.add(clazz);
+			}
+		}
+		return classSet;
 	}
 	
 }

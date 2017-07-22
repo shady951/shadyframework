@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ClassUtil {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ClassUtil.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
 	
 	/**
 	 * 获取类加载器
@@ -39,7 +39,7 @@ public final class ClassUtil {
 			//isInitialized可设置为false以提高加载类的性能
 			clazz = Class.forName(className, isInitialized, getClassLoader());
 		} catch (ClassNotFoundException e) {
-			logger.error("load class failure!!", e);
+			LOGGER.error("load class failure!!", e);
 			throw new RuntimeException(e);
 		}
 		return clazz;
@@ -87,7 +87,7 @@ public final class ClassUtil {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("get class set failure!!", e);
+			LOGGER.error("get class set failure!!", e);
 			throw new RuntimeException(e);
 		}
 		return classSet;

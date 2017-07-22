@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class PropsUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(PropsUtil.class); //ques:
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropsUtil.class); //ques:
 	
 	/**
 	 * 加载文件属性
@@ -32,13 +32,13 @@ public final class PropsUtil {
 			props = new Properties();
 			props.load(is);
 		} catch (IOException e) {
-			logger.error("load properties file failure!!", e);
+			LOGGER.error("load properties file failure!!", e);
 		} finally {
 			if(is != null) {
 				try {
 					is.close();
 				} catch (IOException e) {
-					logger.error("close input stream failure", e);
+					LOGGER.error("close input stream failure", e);
 				}
 			}
 		}

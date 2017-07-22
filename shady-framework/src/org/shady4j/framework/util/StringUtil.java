@@ -19,4 +19,9 @@ public final class StringUtil {
 	public static boolean isNotEmpty(String str) {
 		return !isEmpty(str);
 	}
+
+	public static String[] splitString(String body, String string) {
+		return body.split(string);
+	}
+	
 }

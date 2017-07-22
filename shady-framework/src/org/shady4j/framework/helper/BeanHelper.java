@@ -10,7 +10,7 @@ import org.shady4j.framework.util.ReflectionUtil;
  * Bean助手类
  * @author tc
  * @since 1.0.0
- *
+ *1
  */
 public final class BeanHelper {
 	
@@ -43,5 +43,12 @@ public final class BeanHelper {
 			throw new RuntimeException("can not get bean by class:" + clazz);
 		}
 		return (T) BEAN_MAP.get(clazz);
+	}
+	
+	/**
+	 * 设置Bean实例（代理类覆盖）
+	 */
+	public static void setBean(Class<?> clazz, Object obj) {
+		BEAN_MAP.put(clazz, obj); //qeus:需要研究一下hashcode
 	}
 }
