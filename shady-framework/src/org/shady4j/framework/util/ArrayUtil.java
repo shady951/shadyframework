@@ -23,4 +23,5 @@ public final class ArrayUtil {
 	public static boolean isEmpty(Object[]  array) {
 		return ArrayUtils.isEmpty(array);
 	}
+	
 }
