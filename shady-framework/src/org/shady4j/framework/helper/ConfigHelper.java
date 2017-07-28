@@ -9,7 +9,7 @@ import org.shady4j.framework.util.PropsUtil;
  * 属性文件助手类
  * @author tc
  * @since 1.0.0
- *
+ *1
  */
 public final class ConfigHelper {
 

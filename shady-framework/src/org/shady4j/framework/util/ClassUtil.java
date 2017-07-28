@@ -55,6 +55,9 @@ public final class ClassUtil {
 			Enumeration<URL> urls = getClassLoader().getResources(packageName.replace(".", "/"));
 			while(urls.hasMoreElements()) {
 				URL url = urls.nextElement();
+				//<
+				System.out.println(url);
+				//>
 				if(url != null) {
 					String protocol = url.getProtocol();
 					if(protocol.equals("file")) {
@@ -102,24 +105,26 @@ public final class ClassUtil {
 				return pathname.isFile() && pathname.getName().endsWith("class") || pathname.isDirectory();
 			}
 		}); 
-		for(File file : files) {
-			String fileName = file.getName();
-			if(file.isFile()) {
-				String className = fileName.substring(0, fileName.lastIndexOf("."));
-				if(StringUtil.isNotEmpty(packageName)) {
-					className = packageName + "." + className;
+		if(ArrayUtil.isNotEmpty(files)) { 
+           	for(File file : files) {
+				String fileName = file.getName();
+				if(file.isFile()) {
+					String className = fileName.substring(0, fileName.lastIndexOf("."));
+					if(StringUtil.isNotEmpty(packageName)) {
+						className = packageName + "." + className;
+					}
+					doAddClass(classSet, className);
+				} else {
+					 String subPackageName = fileName;
+					 if(StringUtil.isNotEmpty(packageName)) {
+						 subPackageName = packageName + "." + fileName;
+					 }
+					 String subPackagePath = fileName;
+					 if(StringUtil.isNotEmpty(packagePath)) { //这个if判断，个人认为没有必要
+						 subPackagePath = packagePath + "/" + fileName;
+					 }
+					 addClass(classSet, subPackagePath, subPackageName);
 				}
-				doAddClass(classSet, className);
-			} else {
-				 String subPackageName = fileName;
-				 if(StringUtil.isNotEmpty(packageName)) {
-					 subPackageName = packageName + "." + fileName;
-				 }
-				 String subPackagePath = fileName;
-				 if(StringUtil.isNotEmpty(packagePath)) { //这个if判断，个人认为没有必要
-					 subPackagePath = packagePath + "." + fileName;
-				 }
-				 addClass(classSet, subPackagePath, subPackageName);
 			}
 		}
 	}

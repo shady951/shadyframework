@@ -18,19 +18,19 @@ public class Handler {
 	/**
 	 * Behavior方法
 	 */
-	private Method actionMethod;
+	private Method behaviorMethod;
 
-	public Handler(Class<?> controllerClass, Method actionMethod) {
+	public Handler(Class<?> controllerClass, Method behaviorMethod) {
 		this.controllerClass = controllerClass;
-		this.actionMethod = actionMethod;
+		this.behaviorMethod = behaviorMethod;
 	}
 
 	public Class<?> getControllerClass() {
 		return controllerClass;
 	}
 
-	public Method getActionMethod() {
-		return actionMethod;
+	public Method getBehaviorMethod() {
+		return behaviorMethod;
 	}
 	
 }

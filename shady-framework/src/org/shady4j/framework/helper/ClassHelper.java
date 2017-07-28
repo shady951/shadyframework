@@ -48,6 +48,9 @@ public final class ClassHelper {
 	 * 获取应用包名下所有注释过Controller的类
 	 */
 	public static Set<Class<?>> getControllerClassSet() {
+		//<
+		System.out.println("CLASS_SET size:"+CLASS_SET.size());
+		//>
 		Set<Class<?>> classSet = new HashSet<Class<?>>();
 		for(Class<?> clazz : CLASS_SET) {
 			if(clazz.isAnnotationPresent(Controller.class)) {
