@@ -20,7 +20,7 @@ public final class ClassHelper {
 	 * 定义类集合(用于存放所加载的类)
 	 */
 	static{
-		String basePackage = ConfigHelper.getJdbcAppBasePackage();
+		String basePackage = ConfigHelper.getAppBasePackage();
 		CLASS_SET = ClassUtil.getClassSet(basePackage);
 	}
 	
@@ -48,9 +48,6 @@ public final class ClassHelper {
 	 * 获取应用包名下所有注释过Controller的类
 	 */
 	public static Set<Class<?>> getControllerClassSet() {
-		//<
-		System.out.println("CLASS_SET size:"+CLASS_SET.size());
-		//>
 		Set<Class<?>> classSet = new HashSet<Class<?>>();
 		for(Class<?> clazz : CLASS_SET) {
 			if(clazz.isAnnotationPresent(Controller.class)) {

@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.shady4j.framework.util.ReflectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Bean助手类
@@ -14,6 +16,7 @@ import org.shady4j.framework.util.ReflectionUtil;
  */
 public final class BeanHelper {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(BeanHelper.class);
 	/**
 	 * 定义Bean映射
 	 */
@@ -25,6 +28,7 @@ public final class BeanHelper {
 			Object obj = ReflectionUtil.newInstance(beanClass);
 			BEAN_MAP.put(beanClass, obj);
 		}
+		LOGGER.info("bean map has " + BEAN_MAP.size() + " members");
 	}
 	
 	/**

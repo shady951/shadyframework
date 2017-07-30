@@ -7,6 +7,8 @@ import org.shady4j.framework.annotation.Inject;
 import org.shady4j.framework.util.ArrayUtil;
 import org.shady4j.framework.util.CollectionUtil;
 import org.shady4j.framework.util.ReflectionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 依赖注入助手类
@@ -14,6 +16,8 @@ import org.shady4j.framework.util.ReflectionUtil;
  * @since 1.0.0 当前版本该类所创建管理的对象均为单例
  */
 public final class IocHelper {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(IocHelper.class);
 	
 	static {
 		//获取所有Bean类与Bean实例之间的映射关系
@@ -44,5 +48,6 @@ public final class IocHelper {
 				}
 			}
 		}
+		LOGGER.info("IOC Initial success");
 	}
 }

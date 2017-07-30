@@ -89,6 +89,7 @@ public final class ClassUtil {
 					}
 				}
 			}
+			LOGGER.info("package name: " + packageName + "; class set has " + classSet.size() + " members");
 		} catch (Exception e) {
 			LOGGER.error("get class set failure!!", e);
 			throw new RuntimeException(e);

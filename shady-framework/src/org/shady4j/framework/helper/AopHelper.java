@@ -69,6 +69,7 @@ public final class AopHelper {
 				}
 			}
 		}
+		LOGGER.info("proxy set has " + proxySet.size() + " members");
 		return targetMap;
 	}
 }
