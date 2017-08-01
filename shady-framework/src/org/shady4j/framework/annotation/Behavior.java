@@ -15,7 +15,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Behavior {
 	/**
-	 * 请求类型与路径
+	 * 请求类型
 	 */
-	String value();
+	String method() default "get";
+	
+	/**
+	 * 请求路径
+	 */
+	String path();
 }

@@ -30,7 +30,7 @@ public class Param {
 	}
 	
 	/**
-	 *	获取请求参数映射 
+	 *	获取表单参数映射 
 	 */
 	public Map<String, Object> getFieldMap() {
 		Map<String, Object> fieldMap = new HashMap<String, Object>();
@@ -41,8 +41,8 @@ public class Param {
 				if(fieldMap.containsKey(fieldName)) {
 					fieldValue = fieldMap.get(fieldName) + StringUtil.SEPARATOR + fieldValue;
 				}
-				fieldMap.put(fieldName, fieldName);
-			}
+				fieldMap.put(fieldName, fieldValue);
+			} 
 		}
 		return fieldMap;
 	}

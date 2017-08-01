@@ -31,7 +31,7 @@ public final class CollectionUtil {
 	 *判断Map是否为空 
 	 */
 	public static boolean isEmpty(Map<?,?> map) {
-		return !MapUtils.isEmpty(map);
+		return MapUtils.isEmpty(map);
 	}
 	
 	/**

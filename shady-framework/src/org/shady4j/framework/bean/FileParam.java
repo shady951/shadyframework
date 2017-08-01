@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 /**
  * 封装上传文件参数
- * 
  * @author tc
  * @since 1.1.0
  *
@@ -29,6 +28,10 @@ public class FileParam {
 		return fieldName;
 	}
 
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
 	public String getFileName() {
 		return fileName;
 	}
@@ -43,6 +46,12 @@ public class FileParam {
 
 	public InputStream getInputStream() {
 		return inputStream;
+	}
+
+	@Override
+	public String toString() {
+		return "FileParam [fieldName=" + fieldName + ", fileName=" + fileName + ", fileSize=" + fileSize + ", contentType=" + contentType
+				+ "]";
 	}
 
 }

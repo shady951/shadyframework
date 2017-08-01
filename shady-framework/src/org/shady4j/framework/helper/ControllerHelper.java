@@ -36,24 +36,19 @@ public final class ControllerHelper {
 					for(Method method : methods) {
 						//判断当前方法是否带有Behavior注解
 						if(method.isAnnotationPresent(Behavior.class)) {
-							String behaviorValue = method.getAnnotation(Behavior.class).value();
-							//匹配请求路径
-							if(behaviorValue.matches("\\w+:/\\w*")) {
-								String[] valueArray = behaviorValue.split(":");
-								if(ArrayUtil.isNotEmpty(valueArray) && valueArray.length == 2) {
-									//冒号前面为请求方式，后面为请求路径
-									Request request = new Request(valueArray[0], valueArray[1]);
-									Handler handler = new Handler(clazz, method);
-									BEHAVIOR_MAP.put(request, handler);
-								}
+							//默认小写为准
+							String behaviorMethod = method.getAnnotation(Behavior.class).method().toLowerCase();
+							String behaviorPath = method.getAnnotation(Behavior.class).path();
+								Request request = new Request(behaviorMethod, behaviorPath);
+								Handler handler = new Handler(clazz, method);
+								BEHAVIOR_MAP.put(request, handler);
 							}
 						}
 					}
 				}
 			}
-		}
 		LOGGER.info("behavior map has" + BEHAVIOR_MAP.size() + "members");
-	}
+		}
 	
 	public static Handler getHandler(String requestMethod, String requestPath) {
 		Request request = new Request(requestMethod, requestPath);

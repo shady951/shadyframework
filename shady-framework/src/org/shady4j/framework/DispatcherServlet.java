@@ -21,6 +21,7 @@ import org.shady4j.framework.helper.BeanHelper;
 import org.shady4j.framework.helper.ConfigHelper;
 import org.shady4j.framework.helper.ControllerHelper;
 import org.shady4j.framework.helper.RequestHelper;
+import org.shady4j.framework.helper.ServletHelper;
 import org.shady4j.framework.helper.UploadHelper;
 import org.shady4j.framework.util.JsonUtil;
 import org.shady4j.framework.util.ReflectionUtil;
@@ -42,7 +43,7 @@ public class DispatcherServlet extends HttpServlet{
 		//获取ServletContext对象，用于注册Servlet
 		ServletContext servletContext = config.getServletContext();
 		//注册处理JSP的Serlvet
-		ServletRegistration jspServlet = servletContext.getServletRegistration("jsp"); // ques:有什么用
+		ServletRegistration jspServlet = servletContext.getServletRegistration("jsp"); // ques:各种注册有什么用,重点！
 		jspServlet.addMapping(ConfigHelper.getAppJspPath() + "*");
 		//注册处理静态资源的默认Serlvet
 		ServletRegistration defaultServlet = servletContext.getServletRegistration("default");
@@ -53,38 +54,45 @@ public class DispatcherServlet extends HttpServlet{
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//获取请求方法与请求路径
-		String requestMethod = request.getMethod().toLowerCase();
-		String requestPath = request.getPathInfo();
-		//跳过/favicon.ico请求
-		if(requestPath.equals("/favicon.ico")) { //ques:这是什么请求
-			return;
-		}
-		//与带有Behavior注解的方法配对，获取其处理器
-		Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
-		if(handler != null) {
-			//获取Controller类及其Bean实例
-			Class<?> controllerClass = handler.getControllerClass();
-			Object controllerObj = BeanHelper.getBean(controllerClass);
-			Param param;
-			if(UploadHelper.isMultipart(request)) {
-				param = UploadHelper.creatParam(request);
-			} else {
-				param = RequestHelper.createParam(request);
+		ServletHelper.init(request, response);
+		try {
+			//获取请求方法与请求路径
+			String requestMethod = request.getMethod().toLowerCase();
+			String requestPath = request.getPathInfo();
+			//跳过/favicon.ico请求
+			if(requestPath.equals("/favicon.ico")) { //ques:这是什么请求
+				return;
 			}
-			//<7.27,添加处理json的功能
-//			if (request.getContentType().equals("application/json")) {
-//				String jsonString = StreamUtil.getString(request.getInputStream())
-//				JsonUtil.fromJson(jsonString, );
-//			}
-			//>
-			//调用带Behavior注解的配对方法
-			Object result = ReflectionUtil.invokeMethod(controllerObj, handler.getBehaviorMethod(), param); //TODO
-			if(result instanceof View) {
-				handleViewResult((View) result, request, response);
-			} else if(result instanceof Data) {
-				handleDataResult((Data) result, request, response);
+			//与带有Behavior注解的方法配对，获取其处理器
+			Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
+			if(handler != null) {
+				//获取Controller类及其Bean实例
+				Class<?> controllerClass = handler.getControllerClass();
+				Object controllerObj = BeanHelper.getBean(controllerClass);
+				Param param;
+				if(UploadHelper.isMultipart(request)) {
+					param = UploadHelper.creatParam(request);
+				} else {
+					param = RequestHelper.createParam(request);
+				}
+				/*
+				//<7.27,添加处理json的功能
+				if (request.getContentType().equals("application/json")) {
+					String jsonString = StreamUtil.getString(request.getInputStream())
+					JsonUtil.fromJson(jsonString, );
+				}
+				//>
+				//调用带Behavior注解的配对方法
+				 */
+				Object result = ReflectionUtil.invokeMethod(controllerObj, handler.getBehaviorMethod(), param);
+				if(result instanceof View) {
+					handleViewResult((View) result, request, response);
+				} else if(result instanceof Data) {
+					handleDataResult((Data) result, request, response);
+				}
 			}
+		} finally {
+			ServletHelper.destroy();
 		}
 	}
 
