@@ -34,7 +34,7 @@ public final class JsonUtil {
 	/**
 	 * 将JSON转为POJO 
 	 */
-	public static <T> T fromJson(String json, Class<T> type) { //ques:好好研究泛型
+	public static <T> T fromJson(String json, Class<T> type) {
 		T pojo;
 		try {
 			pojo = OBJECT_MAPPER.readValue(json, type);

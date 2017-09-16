@@ -6,10 +6,11 @@ import org.apache.commons.lang3.StringUtils;
  * 字符串工具类
  * @author tc
  * @since 1.0.0
+ * 1
  */
 public final class StringUtil {
 
-	public static final String SEPARATOR = String.valueOf((char) 29); //ques:有什么用
+	public static final String SEPARATOR = String.valueOf((char) 29); 
 
 	public static boolean isEmpty(String str) {
 		if(str != null) {

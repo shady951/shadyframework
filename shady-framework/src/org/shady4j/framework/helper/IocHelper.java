@@ -40,7 +40,7 @@ public final class IocHelper {
 							Object injectObj = beanMap.get(field.getType());
 							//判断injectObj实例是否被包含在beanMap中
 							if(injectObj != null) {
-								//用反射初始化obj实例中被Injdec注解的成员变量
+								//用反射初始化obj实例中被Inject注解的成员变量
 								ReflectionUtil.setField(obj, field, injectObj);
 							}
 						}

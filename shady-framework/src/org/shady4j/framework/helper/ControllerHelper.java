@@ -39,17 +39,20 @@ public final class ControllerHelper {
 							//默认小写为准
 							String behaviorMethod = method.getAnnotation(Behavior.class).method().toLowerCase();
 							String behaviorPath = method.getAnnotation(Behavior.class).path();
-								Request request = new Request(behaviorMethod, behaviorPath);
-								Handler handler = new Handler(clazz, method);
-								BEHAVIOR_MAP.put(request, handler);
-							}
+							Request request = new Request(behaviorMethod, behaviorPath);
+							Handler handler = new Handler(clazz, method);
+							BEHAVIOR_MAP.put(request, handler);
 						}
 					}
 				}
 			}
-		LOGGER.info("behavior map has" + BEHAVIOR_MAP.size() + "members");
 		}
-	
+	LOGGER.info("behavior map has" + BEHAVIOR_MAP.size() + "members");
+	}
+
+	/**
+	 * 转发匹配 
+	 */
 	public static Handler getHandler(String requestMethod, String requestPath) {
 		Request request = new Request(requestMethod, requestPath);
 		return BEHAVIOR_MAP.get(request); //ques:关于判断两个对象是否相同

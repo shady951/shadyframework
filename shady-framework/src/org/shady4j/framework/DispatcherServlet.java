@@ -31,7 +31,7 @@ import org.shady4j.framework.util.StringUtil;
  * 请求转发类
  * @author tc
  * @since 1.1.0
- *3
+ *
  */
 @WebServlet(urlPatterns = "/*", loadOnStartup = 0)
 public class DispatcherServlet extends HttpServlet{
@@ -42,10 +42,10 @@ public class DispatcherServlet extends HttpServlet{
 		HelperLoader.init();
 		//获取ServletContext对象，用于注册Servlet
 		ServletContext servletContext = config.getServletContext();
-		//注册处理JSP的Serlvet
-		ServletRegistration jspServlet = servletContext.getServletRegistration("jsp"); // ques:各种注册有什么用,重点！
+		//注册处理JSP的Serlvet，AppJspPath不能为web根目录
+		ServletRegistration jspServlet = servletContext.getServletRegistration("jsp"); 
 		jspServlet.addMapping(ConfigHelper.getAppJspPath() + "*");
-		//注册处理静态资源的默认Serlvet
+		//注册处理静态资源的默认Serlvet，AppAssetPath不能为web根目录
 		ServletRegistration defaultServlet = servletContext.getServletRegistration("default");
 		defaultServlet.addMapping(ConfigHelper.getAppAssetPath() + "*");
 		//加载文件上传模块
@@ -54,14 +54,19 @@ public class DispatcherServlet extends HttpServlet{
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//加载本地线程对象
 		ServletHelper.init(request, response);
 		try {
 			//获取请求方法与请求路径
 			String requestMethod = request.getMethod().toLowerCase();
 			String requestPath = request.getPathInfo();
 			//跳过/favicon.ico请求
-			if(requestPath.equals("/favicon.ico")) { //ques:这是什么请求
-				return;
+//			if(requestPath.equals("/favicon.ico")) {
+//				return;
+//			}
+			//get请求根目录会默认访问"/index"路径
+			if(requestPath == null && requestMethod.equals("get")) {
+				requestPath = "/index";
 			}
 			//与带有Behavior注解的方法配对，获取其处理器
 			Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
@@ -70,28 +75,32 @@ public class DispatcherServlet extends HttpServlet{
 				Class<?> controllerClass = handler.getControllerClass();
 				Object controllerObj = BeanHelper.getBean(controllerClass);
 				Param param;
+				//将上传文件请求与普通请求分开处理
 				if(UploadHelper.isMultipart(request)) {
 					param = UploadHelper.creatParam(request);
 				} else {
 					param = RequestHelper.createParam(request);
 				}
 				/*
-				//<7.27,添加处理json的功能
+				//<添加处理json的功能
 				if (request.getContentType().equals("application/json")) {
 					String jsonString = StreamUtil.getString(request.getInputStream())
 					JsonUtil.fromJson(jsonString, );
 				}
 				//>
-				//调用带Behavior注解的配对方法
 				 */
+				//调用带Behavior注解的配对方法
 				Object result = ReflectionUtil.invokeMethod(controllerObj, handler.getBehaviorMethod(), param);
+				//若返回View对象，则是JSP视图
 				if(result instanceof View) {
 					handleViewResult((View) result, request, response);
+				//若返回Data对象，则是Json数据
 				} else if(result instanceof Data) {
 					handleDataResult((Data) result, request, response);
 				}
 			}
 		} finally {
+			//移除本地线程对象
 			ServletHelper.destroy();
 		}
 	}
@@ -116,6 +125,7 @@ public class DispatcherServlet extends HttpServlet{
 			//以开头是否有"/"来判定是转发还是重定向
 			if(path.startsWith("/")) {
 				response.sendRedirect(request.getContextPath() + path);
+				System.out.println(request.getContextPath());
 			} else {
 				Map<String, Object> medel = view.getModel();
 				medel.putAll(view.getModel());
@@ -125,7 +135,6 @@ public class DispatcherServlet extends HttpServlet{
 				request.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(request, response);
 			}
 		}
-		
 	}
 	
 }

@@ -47,5 +47,4 @@ public class Request {
 		return EqualsBuilder.reflectionEquals(this, obj); ////ques:原理，结合ControllerHelper.getHandler()思考
 	}
 	
-	
 }

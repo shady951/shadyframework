@@ -49,7 +49,7 @@ public final class UploadHelper {
 	public static void init(ServletContext servletContext) {
 		File repository = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 		servletFileUpload = new ServletFileUpload(new DiskFileItemFactory
-				(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD, repository)); //ques:看不懂
+				(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD, repository)); 
 		int uploadLimit = ConfigHelper.getAppUploadLimit();
 		if(uploadLimit != 0) {
 			//文件大小限制以MB为单位
@@ -73,7 +73,7 @@ public final class UploadHelper {
 		//文件集合
 		List<FileParam> fileParamList = new ArrayList<FileParam>();
 		try {
-			//从request中获取以multipart / form-data POST请求中接收到的文件或表单
+			//从request中获取以multipart/form-data POST请求中接收到的文件或表单
 			Map<String, List<FileItem>> fileItemListMap = servletFileUpload.parseParameterMap(request);
 			if(CollectionUtil.isNotEmpty(fileItemListMap)) {
 				for(Map.Entry<String, List<FileItem>> fileItemListEntry : fileItemListMap.entrySet()) {
@@ -86,7 +86,7 @@ public final class UploadHelper {
 								String fieldValue = fileItem.getString("UTF-8");
 								formParamList.add(new FormParam(fieldName, fieldValue));
 							} else {
-								//fileItem.getName(),获得客户文件系统中的原始文件名
+								//获取上传文件的真实文件名
 								String fileName = FileUtil.getRealFileName(new String(fileItem.getName().getBytes(), "UTF-8"));
 								if(StringUtil.isNotEmpty(fileName)) {
 									long fileSize = fileItem.getSize();

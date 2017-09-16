@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * 类操作工具类
  * @author tc
  * @since 1.0.0
- *3
+ *
  */
 public final class ClassUtil {
 	
@@ -27,7 +27,7 @@ public final class ClassUtil {
 	 * 获取类加载器
 	 */
 	public static ClassLoader getClassLoader() {
-		return Thread.currentThread().getContextClassLoader(); //ques:与class.getClassLoader()的区别
+		return Thread.currentThread().getContextClassLoader();
 	}
 	
 	/**
@@ -55,9 +55,6 @@ public final class ClassUtil {
 			Enumeration<URL> urls = getClassLoader().getResources(packageName.replace(".", "/"));
 			while(urls.hasMoreElements()) {
 				URL url = urls.nextElement();
-				//<
-				System.out.println(url);
-				//>
 				if(url != null) {
 					String protocol = url.getProtocol();
 					if(protocol.equals("file")) {
@@ -68,14 +65,14 @@ public final class ClassUtil {
 						 * 来自google翻译，详见java.net.URL类注释。
 						 */
 						//获取绝对路径
-						String packagePath = url.getPath().replaceAll("%20", " "); //ques:既然没使用正则，为什么不用replace() 
+						String packagePath = url.getPath().replaceAll("%20", " ");
 						addClass(classSet, packagePath, packageName);
 					} else if (protocol.equals("jar")) {
 						JarURLConnection juc = (JarURLConnection )url.openConnection();
 						if(juc != null) {
 							JarFile jarFile = juc.getJarFile();
 							if(jarFile != null) {
-								Enumeration<JarEntry> jarEntries = jarFile.entries(); //// 枚举获得JAR文件内的实体,即相对路径
+								Enumeration<JarEntry> jarEntries = jarFile.entries(); // 枚举获得JAR文件内的实体,即相对路径
 								while(jarEntries.hasMoreElements()) {
 									JarEntry jarEntry = jarEntries.nextElement();
 									String jarEntryName = jarEntry.getName();
@@ -99,9 +96,9 @@ public final class ClassUtil {
 
 	private static void addClass(Set<Class<?>> classSet, String packagePath, String packageName) {
 		//通过过滤得到class文件和目录
-		//ques:为何不用相对路径查找资源，我想可能是该项目本身是框架，相对路径找不到项目资源
 		//此类下的new File("a.txt").getAbsolutePath();输出为 G:\Data\Workspaces\MyEclipse 2015 CI\shady-framework\a.txt
 		File[] files = new File(packagePath).listFiles(new FileFilter() {
+			//设置过滤策略
 			public boolean accept(File pathname) {
 				return pathname.isFile() && pathname.getName().endsWith("class") || pathname.isDirectory();
 			}
@@ -110,26 +107,33 @@ public final class ClassUtil {
            	for(File file : files) {
 				String fileName = file.getName();
 				if(file.isFile()) {
+					//是class文件
 					String className = fileName.substring(0, fileName.lastIndexOf("."));
 					if(StringUtil.isNotEmpty(packageName)) {
 						className = packageName + "." + className;
 					}
+					//加载已定位的class
 					doAddClass(classSet, className);
 				} else {
+					//是目录路径
 					 String subPackageName = fileName;
 					 if(StringUtil.isNotEmpty(packageName)) {
 						 subPackageName = packageName + "." + fileName;
 					 }
 					 String subPackagePath = fileName;
-					 if(StringUtil.isNotEmpty(packagePath)) { //这个if判断，个人认为没有必要
+					 if(StringUtil.isNotEmpty(packagePath)) { 
 						 subPackagePath = packagePath + "/" + fileName;
 					 }
+					 //使用递归调用继续扫描class文件
 					 addClass(classSet, subPackagePath, subPackageName);
 				}
 			}
 		}
 	}
 
+	/**
+	 * 添加类
+	 */
 	private static void doAddClass(Set<Class<?>> classSet, String className) {
 		Class<?> clazz = loadClass(className, false);
 		classSet.add(clazz);

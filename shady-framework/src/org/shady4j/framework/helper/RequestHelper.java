@@ -47,6 +47,7 @@ public final class RequestHelper {
 				if(fieldValues.length == 1) {
 					fieldValue = fieldValues[0];
 				} else {
+					//同名参数的多个值，将使用特殊分隔符拼接
 					StringBuilder sb = new StringBuilder("");
 					for(int i = 0; i < fieldValues.length; i++) {
 						sb.append(fieldValues[i]);
@@ -70,6 +71,7 @@ public final class RequestHelper {
 		 */
 		String body = CodeUtil.decodeURL(StreamUtil.getString(request.getInputStream()));
 		if(StringUtil.isNotEmpty(body)) {
+			//分离提取字段
 			String[] params = StringUtil.splitString(body, "&");
 			if(ArrayUtil.isNotEmpty(params)) {
 				for(String param : params) {

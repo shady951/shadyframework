@@ -21,7 +21,7 @@ public class ProxyManager {
 		return (T) Enhancer.create(targetClass, new MethodInterceptor() {
 			public Object intercept(Object targetObject, Method targetMethod, Object[] methodParams,
 					MethodProxy methodProxy) throws Throwable {
-				//将切面的执行步骤放入ProxyChain中执行
+				//将切面类的执行顺序用ProxyChain来链式执行
 				return new ProxyChain(targetClass, targetObject, targetMethod, methodProxy, methodParams, proxyList).doProxyChains();
 			}
 		});

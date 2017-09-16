@@ -3,6 +3,7 @@ package org.shady4j.framework.helper;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.shady4j.framework.annotation.Aspect;
 import org.shady4j.framework.annotation.Controller;
 import org.shady4j.framework.annotation.Service;
 import org.shady4j.framework.util.ClassUtil;
@@ -10,7 +11,7 @@ import org.shady4j.framework.util.ClassUtil;
 /**
  * 类操作助手类
  * @author tc
- * @since 1.0.0
+ * @since 1.1.0
  */
 public final class ClassHelper {
 	
@@ -58,12 +59,26 @@ public final class ClassHelper {
 	}
 	
 	/**
+	 * 获取应用包名下所有注释过Aspect的类
+	 */
+	public static Set<Class<?>> getAspectClassSet() {
+		Set<Class<?>> classSet = new HashSet<Class<?>>();
+		for(Class<?> clazz : CLASS_SET) {
+			if(clazz.isAnnotationPresent(Aspect.class)) {
+				classSet.add(clazz);
+			}
+		}
+		return classSet;
+	}
+	
+	/**
 	 * 获取应用包名下所有Bean类
 	 */
 	public static Set<Class<?>> getBeanClassSet() {
 		Set<Class<?>> beanClassSet = new HashSet<Class<?>>();
 		beanClassSet.addAll(getControllerClassSet());
 		beanClassSet.addAll(getServiceClassSet());
+		beanClassSet.addAll(getAspectClassSet());
 		return beanClassSet;
 	}
 	

@@ -125,4 +125,5 @@ public class Param {
 	public boolean getboolean(String name) {
 		return CastUtil.castBoolean(getFieldMap().get(name));
 	}
+	
 }

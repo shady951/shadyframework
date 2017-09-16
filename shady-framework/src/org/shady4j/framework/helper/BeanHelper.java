@@ -23,7 +23,9 @@ public final class BeanHelper {
 	private static final Map<Class<?>, Object> BEAN_MAP = new HashMap<Class<?>, Object>();
 	
 	static {
+		//获取Bean集合
 		Set<Class<?>> beanClassSet = ClassHelper.getBeanClassSet();
+		//将Bean类实例化并加入映射
 		for(Class<?> beanClass : beanClassSet) {
 			Object obj = ReflectionUtil.newInstance(beanClass);
 			BEAN_MAP.put(beanClass, obj);
@@ -50,7 +52,7 @@ public final class BeanHelper {
 	}
 	
 	/**
-	 * 设置Bean实例（代理类覆盖）
+	 * 设置Bean实例（用于代理类覆盖）
 	 */
 	public static void setBean(Class<?> clazz, Object obj) {
 		BEAN_MAP.put(clazz, obj); //qeus:需要研究一下hashcode

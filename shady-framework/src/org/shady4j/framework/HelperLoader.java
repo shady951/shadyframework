@@ -17,16 +17,15 @@ public final class HelperLoader {
 	
 	public static void init() {
 		//AopHelper要在IocHelper之前加载，因为首先要通过AopHelper获取代理实例，再进行依赖注入
-		Class<?>[] classList = {
+		Class<?>[] classArr = {
 				ClassHelper.class,
 				BeanHelper.class,
 				AopHelper.class,
 				IocHelper.class,
 				ControllerHelper.class};
 		//加载含有static块的类
-		for(Class<?> clazz : classList) {
+		for(Class<?> clazz : classArr) {
 			ClassUtil.loadClass(clazz.getName(), true);
 		}
 	}
-	
 }
