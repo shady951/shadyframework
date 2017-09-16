@@ -3,6 +3,7 @@ package org.shady4j.framework.helper;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.shady4j.framework.annotation.Aspect;
 import org.shady4j.framework.annotation.Controller;
 import org.shady4j.framework.annotation.Service;
 import org.shady4j.framework.util.ClassUtil;
@@ -10,7 +11,7 @@ import org.shady4j.framework.util.ClassUtil;
 /**
  * 类操作助手类
  * @author tc
- * @since 1.0.0
+ * @since 1.1.0
  */
 public final class ClassHelper {
 	
@@ -20,7 +21,7 @@ public final class ClassHelper {
 	 * 定义类集合(用于存放所加载的类)
 	 */
 	static{
-		String basePackage = ConfigHelper.getJdbcAppBasePackage();
+		String basePackage = ConfigHelper.getAppBasePackage();
 		CLASS_SET = ClassUtil.getClassSet(basePackage);
 	}
 	
@@ -48,12 +49,22 @@ public final class ClassHelper {
 	 * 获取应用包名下所有注释过Controller的类
 	 */
 	public static Set<Class<?>> getControllerClassSet() {
-		//<
-		System.out.println("CLASS_SET size:"+CLASS_SET.size());
-		//>
 		Set<Class<?>> classSet = new HashSet<Class<?>>();
 		for(Class<?> clazz : CLASS_SET) {
 			if(clazz.isAnnotationPresent(Controller.class)) {
+				classSet.add(clazz);
+			}
+		}
+		return classSet;
+	}
+	
+	/**
+	 * 获取应用包名下所有注释过Aspect的类
+	 */
+	public static Set<Class<?>> getAspectClassSet() {
+		Set<Class<?>> classSet = new HashSet<Class<?>>();
+		for(Class<?> clazz : CLASS_SET) {
+			if(clazz.isAnnotationPresent(Aspect.class)) {
 				classSet.add(clazz);
 			}
 		}
@@ -67,6 +78,7 @@ public final class ClassHelper {
 		Set<Class<?>> beanClassSet = new HashSet<Class<?>>();
 		beanClassSet.addAll(getControllerClassSet());
 		beanClassSet.addAll(getServiceClassSet());
+		beanClassSet.addAll(getAspectClassSet());
 		return beanClassSet;
 	}
 	

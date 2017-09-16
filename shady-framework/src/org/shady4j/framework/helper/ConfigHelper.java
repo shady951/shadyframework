@@ -46,21 +46,28 @@ public final class ConfigHelper {
 	/**
 	 * 获取应用基础包名
 	 */
-	public static String getJdbcAppBasePackage() {
+	public static String getAppBasePackage() {
 		return PropsUtil.getString(CONFIG_PROPS, ConfigConstant.APP_BASE_PACKAGE);
 	}
 
 	/**
 	 * 获取应用JSP路径
 	 */
-	public static String getJdbcAppJspPath() {
-		return PropsUtil.getString(CONFIG_PROPS, ConfigConstant.APP_JSP_PATH, "/WEB-INF/view/");
+	public static String getAppJspPath() {
+		return PropsUtil.getString(CONFIG_PROPS, ConfigConstant.APP_JSP_PATH, "/view/");
 	}
 	
 	/**
 	 * 获取应用静态资源路径
 	 */
-	public static String getJdbcAppAssetPath() {
-		return PropsUtil.getString(CONFIG_PROPS, ConfigConstant.APP_ASSET_PATH, "/asset/");
+	public static String getAppAssetPath() {
+		return PropsUtil.getString(CONFIG_PROPS, ConfigConstant.APP_ASSET_PATH, "/resources/");
+	}
+
+	/**
+	 *	 获取应用文件上传限制 
+	 */
+	public static int getAppUploadLimit() {
+		return PropsUtil.getInt(CONFIG_PROPS, ConfigConstant.APP_UPLOAD_LIMIT, 10);
 	}
 }

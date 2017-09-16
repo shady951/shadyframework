@@ -16,7 +16,7 @@ public abstract class AspectProxy implements Proxy{
 	private static final Logger LOGGER = LoggerFactory.getLogger(AspectProxy.class);
 	
 	/**
-	 * 按顺序执行切面
+	 * 执行切面逻辑
 	 */
 	public final Object doProxy(ProxyChain proxyChain) throws Throwable {
 		Object result = null;
@@ -42,22 +42,40 @@ public abstract class AspectProxy implements Proxy{
 		return result;
 	}
 
-	public void error(Class<?> targetClass, Method targetMethod, Object[] methodParams, Throwable e) {
+	/**
+	 * 在进入方法时执行
+	 */
+	public void begin() {
 	}
 
+	/**
+	 * 用于设置拦截过滤条件
+	 */
 	public boolean intercept(Class<?> targetClass, Method targetMethod, Object[] methodParams) throws Throwable {
 		return true;
 	}
-
+	
+	/**
+	 * 在目标方法调用前执行
+	 */
 	public void before(Class<?> targetClass, Method targetMethod, Object[] methodParams) throws Throwable {
 	}
-
+	
+	/**
+	 * 在目标方法调用后执行
+	 */
 	public void after(Class<?> targetClass, Method targetMethod, Object[] methodParams, Object result) throws Throwable {
 	}
-
-	public void begin() {
-	}
 	
+	/**
+	 * 在抛出异常时执行
+	 */
+	public void error(Class<?> targetClass, Method targetMethod, Object[] methodParams, Throwable e) {
+	}
+
+	/**
+	 * 在退出方法时执行
+	 */
 	public void end() {
 	}
 	

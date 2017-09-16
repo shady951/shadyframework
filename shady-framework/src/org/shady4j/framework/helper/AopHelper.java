@@ -16,8 +16,11 @@ import org.slf4j.LoggerFactory;
 /**
  * 切面助手类
  * @author tc
- * @since 1.0.0
- * note：该类对书上的内容进行了精简，可能提高了耦合性。
+ * @since 1.1.0
+ * note1：将一个目标类配一个切面类实例修改为单例(即：一个切面类配所有目标类)，增强性能
+ * note2：将以注解为切面修改为以类为切面，增强切面精细度
+ * note3：对书上的内容进行了重构以精简代码，但可能提高了耦合。
+ * note4：书上框架对于切面类并没有进行管理，导致切面类无法让成员变量依赖注入，现已做优化
  */
 public final class AopHelper {
 
@@ -39,24 +42,27 @@ public final class AopHelper {
 	}
 	
 	/**
-	 *	获取目标对象与切面对象集合的映射
+	 *	获取目标类与切面类实例集合的映射
 	 */
 	private static Map<Class<?>, List<Proxy>> createTargetMap() throws Exception {
-		//获取切面对象集合
+		//获取继承了AspectProxy类的对象集合
 		Set<Class<?>> proxySet = ClassHelper.getClassSetBySuper(AspectProxy.class);
-		//获取所有Bean实例
+		//获取所有Bean类
 		Set<Class<?>> classSet = ClassHelper.getBeanClassSet();
+		//获取所有Bean类与实例的映射
+		Map<Class<?>, Object> beanMap = BeanHelper.getBeanMap();
+		//创建目标class与切面类的映射
 		Map<Class<?>, List<Proxy>> targetMap = new HashMap<Class<?>, List<Proxy>>();
 		for(Class<?> proxyClass : proxySet) {
 			//筛选切面对象，切面对象必须满足：1、继承AspectProxy。2、拥有Aspect注解
 			if(proxyClass.isAnnotationPresent(Aspect.class))	 {
+				//获取切面类实例
+				Proxy proxy = (Proxy)beanMap.get(proxyClass);
 				//获取切面对象的注解类
 				Aspect aspect = proxyClass.getAnnotation(Aspect.class);
 				for(Class<?> clazz : classSet) {
-					//判断目标对象的注解类，与aspect对象里面表示的注解类，是否为相同注解类
-					if(clazz.isAnnotationPresent(aspect.Value()))	{
-						//创建切面对象
-						Proxy proxy = (Proxy)proxyClass.newInstance();
+					//判断目标对象的类全名，与aspect对象里面表示的类全名，是否相同，不区分大小写
+					if(clazz.getCanonicalName().toLowerCase().equals(aspect.Value().toLowerCase())) {
 						//添加目标类与切面对象集合的映射
 						if(targetMap.containsKey(clazz)) {
 							targetMap.get(clazz).add(proxy);
@@ -69,6 +75,9 @@ public final class AopHelper {
 				}
 			}
 		}
+		LOGGER.info("proxy set has " + proxySet.size() + " members");
+		LOGGER.info("targetMap has " + targetMap.size() + " members");
 		return targetMap;
 	}
+	
 }

@@ -1,6 +1,5 @@
 package org.shady4j.framework.annotation;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,7 +16,7 @@ import java.lang.annotation.Target;
 public @interface Aspect {
 	
 	/**
-	 * 注解 
+	 * 类的全名
 	 */
-	Class<? extends Annotation> Value();
+	String Value();
 }

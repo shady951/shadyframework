@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
  * 属性文件工具类
  * @author tc
  * @since 1.0.0
- * 2
+ * 
  */
 public final class PropsUtil {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PropsUtil.class); //ques:
+	private static final Logger LOGGER = LoggerFactory.getLogger(PropsUtil.class); 
 	
 	/**
 	 * 加载文件属性
@@ -25,7 +25,7 @@ public final class PropsUtil {
 		Properties props = null;
 		InputStream is = null;
 		try {
-			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename); //ques:相对路径是否能找到资源
+			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename); 
 			if(is == null) {
 				throw new FileNotFoundException(filename + "the file is not found!!"); 
 			}

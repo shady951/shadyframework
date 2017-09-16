@@ -108,10 +108,9 @@ public final class CastUtil {
 	 */
 	public static boolean castBoolean(Object obj, boolean defaultValue) {
 		boolean booleanValue = defaultValue;
-		if(obj != null) { 
+		if(obj != null) {
 			booleanValue = Boolean.parseBoolean(castString(obj));
 		}
 		return booleanValue;
 	}
-	
 }
