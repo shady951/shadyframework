@@ -60,13 +60,9 @@ public class DispatcherServlet extends HttpServlet{
 			//获取请求方法与请求路径
 			String requestMethod = request.getMethod().toLowerCase();
 			String requestPath = request.getPathInfo();
-			//跳过/favicon.ico请求
-//			if(requestPath.equals("/favicon.ico")) {
-//				return;
-//			}
 			//get请求根目录会默认访问"/index"路径
 			if(requestPath == null && requestMethod.equals("get")) {
-				requestPath = "/index";
+				requestPath = "/";
 			}
 			//与带有Behavior注解的方法配对，获取其处理器
 			Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
@@ -81,14 +77,6 @@ public class DispatcherServlet extends HttpServlet{
 				} else {
 					param = RequestHelper.createParam(request);
 				}
-				/*
-				//<添加处理json的功能
-				if (request.getContentType().equals("application/json")) {
-					String jsonString = StreamUtil.getString(request.getInputStream())
-					JsonUtil.fromJson(jsonString, );
-				}
-				//>
-				 */
 				//调用带Behavior注解的配对方法
 				Object result = ReflectionUtil.invokeMethod(controllerObj, handler.getBehaviorMethod(), param);
 				//若返回View对象，则是JSP视图
@@ -125,14 +113,19 @@ public class DispatcherServlet extends HttpServlet{
 			//以开头是否有"/"来判定是转发还是重定向
 			if(path.startsWith("/")) {
 				response.sendRedirect(request.getContextPath() + path);
-				System.out.println(request.getContextPath());
 			} else {
 				Map<String, Object> medel = view.getModel();
 				medel.putAll(view.getModel());
 				for(Map.Entry<String, Object> medelEntry : medel.entrySet()) {
 					request.setAttribute(medelEntry.getKey(), medelEntry.getValue());
 				}
-				request.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(request, response);
+				//以.jsp结尾则转发至jsp页面
+				if(path.toLowerCase().endsWith(".jsp")) {
+					request.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(request, response);
+				//否则转发至url
+				} else {
+					request.getRequestDispatcher("/" + path).forward(request, response);
+				}
 			}
 		}
 	}

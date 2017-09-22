@@ -92,35 +92,35 @@ public class Param {
 	}
 	
 	/**
-	 *	根据参数名获取String型参数
+	 *	根据参数名获取String型表单参数
 	 */
 	public String getString(String name) {
 		return CastUtil.castString(getFieldMap().get(name));
 	}
 	
 	/**
-	 *	根据参数名获取double型参数
+	 *	根据参数名获取double型表单参数
 	 */
 	public double getDouble(String name) {
 		return CastUtil.castDouble(getFieldMap().get(name));
 	}
 	
 	/**
-	 *	根据参数名获取long型参数
+	 *	根据参数名获取long型表单参数
 	 */
 	public long getLong(String name) {
 		return CastUtil.castLong(getFieldMap().get(name));
 	}
 	
 	/**
-	 *	根据参数名获取int型参数
+	 *	根据参数名获取int型表单参数
 	 */
 	public int getInt(String name) {
 		return CastUtil.castInt(getFieldMap().get(name));
 	}
 	
 	/**
-	 *	根据参数名获取boolean型参数
+	 *	根据参数名获取boolean型表单参数
 	 */
 	public boolean getboolean(String name) {
 		return CastUtil.castBoolean(getFieldMap().get(name));
